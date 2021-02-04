@@ -8,12 +8,12 @@ from app.server.auth.auth_handler import signJWT, decodeJWT
 def user_helper(user):
     return {
         "_id": str(user["_id"]),
-        "email": user["email"]
+        "email": user["email"].strip().lower()
     }
 
 async def check_user(user):
     try:
-        dbuser = await users_collection.find_one({"email": user["email"]})
+        dbuser = await users_collection.find_one({"email": user["email"].lower().strip()})
         if dbuser and verify_password(user["password"], dbuser["hashed_password"]):
             return True
     except Exception as e:
@@ -59,10 +59,10 @@ async def retrieve_user_by_email(email: str):
 async def add_user_to_db(user: dict):
     """adds user in the database"""
     try:
-        dbuser = await users_collection.find_one({"email": user["email"]})
+        dbuser = await users_collection.find_one({"email": user["email"].strip().lower()})
         if dbuser:
             return None
-        
+        user["email"] = user["email"].strip().lower()
         user["hashed_password"] = get_hashed_password(user["password"])
         user.pop("password")
         

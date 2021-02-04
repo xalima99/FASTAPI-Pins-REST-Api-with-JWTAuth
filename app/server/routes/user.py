@@ -30,7 +30,7 @@ async def add_user(user: UserSchema = Body(...)):
 async def user_login(user: UserLoginSchema = Body(...)):
     """Login signup, allows user to access account, returns jwt token if success."""
     user = jsonable_encoder(user)
-    dbuser = await retrieve_user_by_email(user["email"])
+    dbuser = await retrieve_user_by_email(user["email"].strip().lower())
     check = await check_user(user)
     if check:
         return signJWT(dbuser)
