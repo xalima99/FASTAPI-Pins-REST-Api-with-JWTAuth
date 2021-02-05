@@ -15,7 +15,7 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 @app.get("/", tags=["Root"])
-@limiter.limit("5/minute")
+# @limiter.limit("5/minute")
 async def read_root(request: Request, response: Response):
     """Root path, Pin Api available at  http://localhost:8000/v1/docs#/"""
     return {"message": "Welcome to this fantastic app!"}
